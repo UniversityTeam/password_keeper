@@ -9,15 +9,17 @@ interface Account {
   password: string;
 }
 
-interface Country {
-  countryId: number;
+interface ApplicationAccount {
+  applicationAccountId: number;
+  accountId: number;
   name: string;
-}
-
-interface City {
-  cityId: number;
-  name: string;
-  countryId: number;
+  description?: string;
+  accountType?: string;
+  login: string;
+  password: string;
+  additionalFields?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Session {
