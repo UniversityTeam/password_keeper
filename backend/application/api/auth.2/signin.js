@@ -1,7 +1,7 @@
 ({
   access: 'public',
   method: async ({ login, password }) => {
-    const user = await api.auth.provider.getUser(login);
+    const [user] = await api.auth.provider.getUser(login);
     if (!user) throw new Error('Incorrect login or password');
     const { accountId, password: hash } = user;
     const valid = await metarhia.metautil.validatePassword(password, hash);
