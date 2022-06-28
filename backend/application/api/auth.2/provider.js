@@ -4,30 +4,25 @@
     return metarhia.metautil.generateToken(secret, characters, length);
   },
 
-  saveSession(token, data) {
-    db.pg.update('Session', { data: JSON.stringify(data) }, { token });
-  },
+  saveSession: async (token, data) =>
+    await domain.session.update(token, { data: JSON.stringify(data) }),
 
-  startSession(token, data, fields = {}) {
-    const record = { token, data: JSON.stringify(data), ...fields };
-    db.pg.insert('Session', record);
-  },
+  startSession: async (token, data, fields = {}) =>
+    await domain.session.create({
+      token,
+      data: JSON.stringify(data),
+      ...fields,
+    }),
 
-  async restoreSession(token) {
-    const record = await db.pg.row('Session', ['data'], { token });
+  restoreSession: async (token) => {
+    const record = await domain.session.get(token, ['data']);
     if (record && record.data) return record.data;
     return null;
   },
 
-  deleteSession(token) {
-    db.pg.delete('Session', { token });
-  },
+  deleteSession: async (token) => await domain.session.delete(token),
 
-  async registerUser(login, password) {
-    return db.pg.insert('Account', { login, password });
-  },
+  registerUser: async (data) => await domain.account.create(data),
 
-  async getUser(login) {
-    return db.pg.row('Account', { login });
-  },
+  getUser: async (login) => await domain.account.find({ login }),
 });
